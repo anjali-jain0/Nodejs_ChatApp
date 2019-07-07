@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+	<title>Online Voting</title>
+</head>
+<body>
+	<h1>Vote</h1>
+	<form method="post" action='/voted'>
+	<h3> Select Your Favourite Food</h3>
+	<input type="radio" name="option" value="Indian">Indian<br><br>
+	<input type="radio" name="option" value="French">French<br><br>
+	<input type="radio" name="option" value="Chinese">Chinese<br><br>
+	<input type="radio" name="option" value="South Indian">South Indian<br><br>
+    <button type="submit">Vote</button>
+	</form>
+
+<p>Indian : <%= number %> </p>
+
+</body>
+</html>

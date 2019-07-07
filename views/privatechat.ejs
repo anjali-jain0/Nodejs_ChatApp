@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="./assets2/project5addc.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
+  <a class="navbar-brand" href="/">kONNECT</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+  </div>
+</nav>
+<br><br>
+<p id='error'></p>
+<br>
+<br><br>
+<% for(var i=0;i<data.length;i++) { %>
+<h4>Name : </h4><br>
+<p id='presentname'><%= data[i].name %></p><br>
+<% } %>
+<h3>Settings:</h3>
+<br><br>
+<form>
+	Change Name:<br>
+	<input type='text' id='name' name='name'><br><br>
+	<button type='button' onclick='change()'>Change</button><br>
+</form>
+
+<form>
+	<input type='text' id='by' >
+	<input type="text" id="msgval" >
+	<button type="button" onclick="text()"> SAY IT </button> 
+	<p id="chats"></p>
+</form>
+<p id="chats"></p>
+
+</body>  
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+	var socket=io.connect();
+
+    socket.on('connect',function(){
+		socket.emit('fromname' , {id:socket.id});
+	});
+
+	socket.on('gotfrom',function(data){
+		console.log(data.name);
+		document.getElementById('by').value = data.name;
+		socket.emit('store',{from:data.name});
+	});
+	
+	var name='';var prst='';
+
+	function change()
+	{
+		prst= document.getElementById('presentname').innerHTML;
+ 		name = document.getElementById('name').value;
+ 		socket.emit('change',{name:name,prst:prst});
+	}
+
+	  socket.on('userExists', function(data) {
+         document.getElementById('error').innerHTML = data;
+         document.getElementById('name').value='';
+    });
+    
+    var msg ='';var nme = '';
+
+	function text(){
+		msg = document.getElementById('msgval').value;
+		nme = document.getElementById('presentname').innerHTML;
+		document.getElementById('msgval').value='';
+		const by = document.getElementById('by').value;
+		socket.emit('storemsgs',{by:by,to:name,msg:msg});
+    }
+
+    socket.on('newmsg' , function(data){
+    	document.getElementById('chats').innerHTML += '<div><b>' + data.name + ': </b>' + data.msg + '</div>';
+    });
+
+</script>  
+</html>

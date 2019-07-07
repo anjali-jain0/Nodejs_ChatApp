@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+	<title>Online Voting</title>
+</head>
+<body>
+	<h1>Vote</h1>
+	<form method="post" action='/voted'>
+	<h3> Select Your Favourite Food</h3>
+	<input type="radio" name="option" id="1" value="Indian">Indian<br><br>
+	<input type="radio" name="option" id="2" value="French">French<br><br>
+	<input type="radio" name="option" id="3" value="Chinese">Chinese<br><br>
+	<input type="radio" name="option" id="4" value="South Indian">South Indian<br><br>
+    <button type="submit">Vote</button>
+	</form>
+
+<p>Indian : <span id="num"><%= number %></span> </p>
+
+</body>
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+
+	  var socket=io.connect();
+	  var val=document.getElementById('num').innerHTML;
+	  socket.emit('indian',val);
+	  socket.on('indian',f);
+	  function f(data)
+	  {
+	  	console.log(data);
+	  	document.getElementById('num').innerHTML=data;
+	  }
+</script>
+
+</html>
