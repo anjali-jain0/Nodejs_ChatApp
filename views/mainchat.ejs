@@ -2,15 +2,33 @@
 <html>
 <head>
 <link rel="stylesheet" href="/images/chat2style.css" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<link href="/images/doctor2.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<link href="/images/doctor4.css" rel="stylesheet" type="text/css" />
+<link href="/images/style2.css" rel="stylesheet" type="text/css" />
+<link href="/images/project5style.css" rel="stylesheet" type="text/css" />
+<link href="/images/containerandback.css" rel="stylesheet" type="text/css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="./assets2/project5addc.js"></script>
 </head>
 <body>
-    <p id='error'></p>
+<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark  navbar-fixed-top">
+  <a class="navbar-brand" href="/">kONNECT</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+  </div>
+</nav>
+<br><br>
+    <p id='errorname'></p>
     <br>
     <p id='attop'></p>
 	<div>
+    <div class="greybox">
     <form>
       Change Body Color:<br>
       <input type='color' id='color' name='color'><br><br>
@@ -20,69 +38,180 @@
     <% if(msgsfrom.length>0) { %>
     <p>You have got messages from </p>
     <% for(var i=0;i<msgsfrom.length;i++){ %>
-    <li><%= msgsfrom[i] %></li>
+    <li><a href='/showmsgs/<%= name %>/<%= msgsfrom[i] %>' ><button><%= msgsfrom[i].name %></button></a></li>
     <% }} else { %>
     <p>No personal messages</p>
     <% } %>
     <br><br>
+    
 		<span>Pic: <%= pic %></span>
 		<span>Name:<span id="name"><%= name %></span></span>
-		<span>Number: <%= number %></span>
-	</div>
-    <div id='profile'></div>
-	<button onclick="start()">Add me in</button>
-    <ul id="users"></ul>
-    <form><input type="text" id="msgval" ><button type="button" onclick="text()"> SAY IT </button> </form>
-  <p id="chats"></p>
+		<span>Number:<span id="number"> <%= number %></span>
 
+    <div id='profile'></div>
+	<button onclick="sta()">Add me in</button>
+    <ul id="users"></ul>
+  </div>
+   <form class="msginput"><input type="text" placeholder="Type here.." style="width:440px" id="msgval" ><button class='saybtn' type="button" onclick="text()"> SAY IT </button> </form>
+  <p class='chatbox' id="chats">
+  </p>
+
+  <% if(flag){ %>
+  <div class='profileCont'>
+    <h3>Pic : </h3><br>
+    <% for(var i=0;i<profile.length;i++) { %>
+    <h3>Name: </h3><br>
+    <p><%= profile[i].name %><p><br>
+    <h3>Number: </h3><br>
+    <p><%= profile[i].number %><p><br>
+    <% } %>
+  </div>
+  <% } %>
+
+ <!--  <% if(chatflag) { %>
+  <p id='error'></p>
+  <br>
+  <br><br>
+  <% for(var i=0;i<chat.length;i++) { %>
+  <h4>Name : </h4><br>
+  <p id='presentname'><%= chat[i].name %></p><br>
+  <% } %>
+  <h3>Settings:</h3>
+  <br><br>
+  <form>
+    Change Name:<br>
+    <input type='text' id='nameic' name='nameic'><br><br>
+    <button type='button' onclick='change()'>Change</button><br>
+  </form>
+
+  <form>
+    <p id='by'></p>
+    <input type="text" id="msgval2" >
+    <button type="button" onclick="textic()"> SAY IT </button> 
+    <p id="chatsic"></p>
+  </form>
+  <p id="chatsic"></p>
+  <% } %>
+ -->
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+
       var socket=io.connect();
 
-      var message='';var info='';var id=0;
-
-      function clr(){
-        document.body.style.backgroundColor=document.getElementById('color').value;
-      }
-
-      function start()
+      function sta()
       {
-      info=document.getElementById('name').innerHTML;
-      socket.emit('new user',info);
-           
-      socket.on('adduser',function(data){
-         id=data.uid;
-      });
-       
-       socket.on('userExists', function(data) {
-         document.getElementById('error').innerHTML = data;
-      });
-       
-       socket.on('users',function(data){
-        document.getElementById('users').innerHTML='';
-        for(var i=0;i<data.length;i++){
-          var cls= data[i].cls;
-          var name=data[i].name;
-          (document.getElementById('users').innerHTML)+='<li class =' + cls + '>' + name + '</li>' + '<form method="post" action="/profile/' + name + '"' + '>View Profile :<input type="submit" value="profile"></form><form method="post" action="/chat/' + name + '"' + '>Chat :<input type="submit" value="go"></form>' ;
-      }});
+      console.log('stage1');
+      var info1=document.getElementById('number').innerHTML;
+      var info=document.getElementById('name').innerHTML;
+      socket.emit('new user',{name:info,number:info1});
       }
+
+       socket.on('users',function(data){
+
+      console.log('stage3');
+       console.log(data);
+      if(data.flag)
+         document.getElementById('users').innerHTML='';
+      var myname = document.getElementById('name').innerHTML;
+      document.getElementById('users').innerHTML='';
+       for(var i=0;i<data.usernames.length;i++){
+          var cls= data.usernames[i].cls;
+          var name=data.usernames[i].name;
+          (document.getElementById('users').innerHTML)+='<li class =' + cls + '>' + name + '</li>' + '<form method="post" action="/profile/' + myname + '/' + name + '"' + '><button type="submit" class="btn btn-outline-primary">Profile</button></form> <form method="post" action="/chat/' + myname + '/' + name + '"' + '><button type="submit" class="btn btn-outline-primary">Chat</button></form>' ;
+      }});
+
+      socket.on('userExists', function(data) {
+        document.getElementById('errorname').innerHTML = data;
+         //document.getElementById('nameic').value='';
+      });
+
 
       function text()
       {
       message=document.getElementById('msgval').value;
       var n = document.getElementById('name').innerHTML;
       document.getElementById('msgval').value='';
+      var date = (new Date()).getDate();
+      var hours = (new Date()).getHours();
+      var minutes = (new Date()).getMinutes();
       if(message) {
-      socket.emit('send message',{msg:message,nme:n});
+      socket.emit('send message',{msg:message,nme:n,date:date,minutes:minutes,hours:hours});
       }
+     }
       
+      var name='';var prst='';
+
+      function change(){
+        prst= document.getElementById('presentname').innerHTML;
+        name = document.getElementById('nameic').value;
+        socket.emit('change',{name:name,prst:prst});
       }
+
+
       socket.on('new message',function(data){
-        document.getElementById('chats').innerHTML += '<div><b>' + data.name + ': </b>' + data.msg + '</div>';
+        document.getElementById('chats').innerHTML += '<div><b>' + data.name + ': </b>' + data.msg + '  at :  ' 
+                                                   + data.date + '-' + data.hours + ':' + data.minutes + '</div>';
       
       });
+
+
+      var message='';var info='';var id=0;
+
+      function clr(){
+        document.getElementById("chats").style.backgroundColor=document.getElementById('color').value;
+      }
+      
+       
+      
+
+
+      // function showpopup(){
+      //   $.ajax({
+      //     method:'POST',
+      //     url: "http://localhost:8080/profile/" + name , 
+      //     success: function(result){
+      //     $("#div1").html(result);
+      //     }
+      //   });
+      // }
+
+      // var msg ='';var nme = '';
+
+      // function textic(){
+      //   var from = document.getElementById('name').innerHTML;
+      //   var name = document.getElementById('presentname').innerHTML;
+      //   socket.emit('store',{name:name,from:from});
+    
+      //   socket.on('nowstore',function() {
+      //     msg = document.getElementById('msgval2').value;
+      //     nme = document.getElementById('presentname').innerHTML;
+      //     document.getElementById('msgval2').value='';
+      //     const by = from;
+      //     console.log(msg + "and" + by);
+      //     var date = (new Date()).getDate();
+      //     var hours = (new Date()).getHours();
+      //     var minutes = (new Date()).getMinutes();
+      //     socket.emit('storemsgs',{by:by,to:nme,msg:msg,date:date,minutes:minutes,hours:hours});
+      //   })
+      // }
+
+
+      // socket.on('newmsg' , function(data){
+      //   document.getElementById('chatsic').innerHTML += '<div><b>' + data.name + ': </b>' + data.msg + '- at :' + data.date + '-' + data.hours + ':' + data.minutes + '</div>';
+      // });
     
 
 </script>
 </html>
+
+<!-- msgs ke bhr green color container
+msg likhne wle me porper textarea
+msgs ka text white color ka
+names wle e black color naam ke aage photo
+active p green circle
+non-active p red circle
+on this mainchat - 3 vertical boxes - ek apni profile ka shoeing personal msgs , ek saare members ka , ek chat krne wla frame
+how to show profilepage in form of popup
+settings ke liye symbol on side of it grp ke liye hi rkhte h abhi container ke side me symbol click krne p dono settings
+connect popup give z-index 1  -->

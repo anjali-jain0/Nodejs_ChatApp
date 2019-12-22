@@ -18,12 +18,28 @@
   </div>
 </nav>
 <br><br>
-<h3>Pic : </h3><br>
-<% for(var i=0;i<data.length;i++) { %>
-<h3>Name: </h3><br>
-<p><%= data[i].name %><p><br>
-<h3>Number: </h3><br>
-<p><%= data[i].number %><p><br>
-<% } %>
+
+	<div class='cont'>
+	<div class="card" style="width: 32rem;position:absolute;top:80px;left:450px">
+	  <img class="card-img-top" src="..." alt="Card image cap">
+	  <div class="card-body">
+	    <p class="card-text">
+	      <form action='/profiledone' method='post'>
+	      	<% for(var i=0;i<data.length;i++) { %>
+	        <div class="form-group">
+	        <lable for='name'>Name</lable>
+	        <input type="text" class="form-control" name='name' value="<%= data[i].name %>" read-only>
+	        </div>
+	        
+	        <div class="form-group">
+	        <label for='number'>Phone Number</label>
+	        <input type="text" name='number' value='<%= data[i].number %>' class='form-control' read-only>
+	        </div>
+		  </form>
+	    </p>
+	  </div>
+	</div>
+	</div>
+
 </body>    
 </html>

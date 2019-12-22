@@ -18,28 +18,39 @@
   </div>
 </nav>
 <br><br>
-<p id='error'></p>
-<br>
-<br><br>
-<% for(var i=0;i<data.length;i++) { %>
-<h4>Name : </h4><br>
-<p id='presentname'><%= data[i].name %></p><br>
-<% } %>
-<h3>Settings:</h3>
-<br><br>
-<form>
-	Change Name:<br>
-	<input type='text' id='name' name='name'><br><br>
-	<button type='button' onclick='change()'>Change</button><br>
-</form>
 
-<form>
-	<input type='text' id='by' >
-	<input type="text" id="msgval" >
-	<button type="button" onclick="text()"> SAY IT </button> 
-	<p id="chats"></p>
-</form>
-<p id="chats"></p>
+<p id='error'></p>
+  <br>
+
+   <% if(msgs.length>0) { %>
+    <p>You have got messages </p>
+    <% for(var i=0;i<msgs.length;i++){ %>
+    <p><%= msgs[i] %></p>
+    <% }} else { %>
+    <p>No  messages</p>
+    <% } %>
+
+  <br><br>
+  <span>User Name:<span id="name"><%= name %></span></span>
+  <% for(var i=0;i<chat.length;i++) { %>
+  <h4>Name : </h4><br>
+  <p id='presentname'><%= chat[i].name %></p><br>
+  <% } %>
+  <h3>Settings:</h3>
+  <br><br>
+  <form>
+    Change Name:<br>
+    <input type='text' id='nameic' name='nameic'><br><br>
+    <button type='button' onclick='change()'>Change</button><br>
+  </form>
+
+  <form>
+    <p id='by'></p>
+    <input type="text" id="msgval2" >
+    <button type="button" onclick="textic()"> SAY IT </button> 
+    <p id="chatsic"></p>
+  </form>
+  <p id="chatsic"></p>
 
 </body>  
 <script src="/socket.io/socket.io.js"></script>
@@ -47,43 +58,78 @@
 
 	var socket=io.connect();
 
-    socket.on('connect',function(){
-		socket.emit('fromname' , {id:socket.id});
-	});
+ //    socket.on('connect',function(){
+	// 	socket.emit('fromname' , {id:socket.id});
+	// });
 
-	socket.on('gotfrom',function(data){
-		console.log(data.name);
-		document.getElementById('by').value = data.name;
-		socket.emit('store',{from:data.name});
-	});
+	// socket.on('gotfrom',function(data){
+	// 	console.log(data.name);
+	// 	document.getElementById('by').value = data.name;
+	// 	socket.emit('store',{from:data.name});
+	// });
 	
-	var name='';var prst='';
+	// var name='';var prst='';
 
-	function change()
-	{
-		prst= document.getElementById('presentname').innerHTML;
- 		name = document.getElementById('name').value;
- 		socket.emit('change',{name:name,prst:prst});
-	}
+	// function change()
+	// {
+	// 	prst= document.getElementById('presentname').innerHTML;
+ // 		name = document.getElementById('name').value;
+ // 		socket.emit('change',{name:name,prst:prst});
+	// }
 
-	  socket.on('userExists', function(data) {
-         document.getElementById('error').innerHTML = data;
-         document.getElementById('name').value='';
-    });
+	//   socket.on('userExists', function(data) {
+ //         document.getElementById('error').innerHTML = data;
+ //         document.getElementById('name').value='';
+ //    });
     
-    var msg ='';var nme = '';
+ //    var msg ='';var nme = '';
 
-	function text(){
-		msg = document.getElementById('msgval').value;
-		nme = document.getElementById('presentname').innerHTML;
-		document.getElementById('msgval').value='';
-		const by = document.getElementById('by').value;
-		socket.emit('storemsgs',{by:by,to:name,msg:msg});
-    }
+	// function text(){
+	// 	msg = document.getElementById('msgval').value;
+	// 	nme = document.getElementById('presentname').innerHTML;
+	// 	document.getElementById('msgval').value='';
+	// 	const by = document.getElementById('by').value;
+	// 	var date = new Date();
+ //      	var hours = date.getHours();
+ //      	var minutes = date.getMinutes();
+	// 	socket.emit('storemsgs',{by:by,to:name,msg:msg,date:date,minutes:minutes,hours:hours});
+ //    }
 
-    socket.on('newmsg' , function(data){
-    	document.getElementById('chats').innerHTML += '<div><b>' + data.name + ': </b>' + data.msg + '</div>';
-    });
+ //    socket.on('newmsg' , function(data){
+ //    	document.getElementById('chats').innerHTML += '<div><b>' + data.name + ': </b>' + data.msg + '- at :' + data.date + '-' + data.hours + ':' + data.minutes + '</div>';
+ //    });
+
+  function change(){
+        prst= document.getElementById('presentname').innerHTML;
+        name = document.getElementById('nameic').value;
+        socket.emit('change',{name:name,prst:prst});
+      }
+
+      var msg ='';var nme = '';
+
+      function textic(){
+      	console.log('idhr kyaa')
+        var from = document.getElementById('name').innerHTML;
+        var name = document.getElementById('presentname').innerHTML;
+        socket.emit('store',{nm:name,from:from});
+    
+        socket.on('nowstore',function() {
+          msg = document.getElementById('msgval2').value;
+          nme = document.getElementById('presentname').innerHTML;
+          document.getElementById('msgval2').value='';
+          const by = document.getElementById('name').innerHTML;
+          console.log(msg + "and" + by);
+          var date = (new Date()).getDate();
+          var hours = (new Date()).getHours();
+          var minutes = (new Date()).getMinutes();
+          socket.emit('storemsgs',{by:by,to:nme,msg:msg,date:date,minutes:minutes,hours:hours});
+        })
+      }
+
+
+      socket.on('newmsg' , function(data){
+        document.getElementById('chatsic').innerHTML += '<div><b>' + data.name + ': </b>' + data.msg + '- at :' + data.date + '-' + data.hours + ':' + data.minutes + '</div>';
+      });
 
 </script>  
 </html>
